@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\HttpKernel;
 
 $request = Request::createFromGlobals();
 $routes = include APP_PATH . 'app/routing.php';
@@ -29,7 +30,11 @@ $matcher = new UrlMatcher($routes, $context);
 
 try {
     $request->attributes->add($matcher->match($request->getPathInfo()));
-    $response = call_user_func($request->attributes->get('_controller'), $request);
+
+    $resolver = new HttpKernel\Controller\ControllerResolver();
+    $controller = $resolver->getController($request);
+    $arguments = $resolver->getArguments($request, $controller);
+    $response = call_user_func_array($controller, $arguments);
 
 } catch (Routing\Exception\ResourceNotFoundException $e) {
     $response = new Response('Not Found', 404);
@@ -51,14 +56,6 @@ function render_template($request)
     require_once(APP_PATH . 'app/pages/templates/footer.php');
 
     return new Response(ob_get_clean());
-}
-
-function peopleEdit($request){
-
-    // Get people from storage
-    $people = getPeopleFromJsonFile(PEOPLE_FILENAME);
-
-    return render($request, compact('people'));
 }
 
 function render($request, $data){
