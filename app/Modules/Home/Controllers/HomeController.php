@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Modules\Home\Controllers;
 
 use App\View\View;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +19,7 @@ class HomeController
 
     public function indexAction(Request $request)
     {
-        return $this->view->render($request, compact('home'));
+        $viewName = 'Modules/Home/Views/home';
+        return $this->view->render($request, compact('home', 'viewName'));
     }
 }

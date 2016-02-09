@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Modules\People\Controllers;
 
 use App\View\View;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +19,7 @@ class PeopleController {
 
     public function indexAction(Request $request)
     {
-        $viewName = 'people/dashboard';
+        $viewName = 'Modules/People/Views/dashboard';
         return $this->view->render($request, compact('viewName'));
     }
 
@@ -34,6 +34,8 @@ class PeopleController {
         // Get people from storage
         $people = getPeopleFromJsonFile(PEOPLE_FILENAME);
 
-        return $this->view->render($request, compact('people'));
+        $viewName = 'Modules/People/Views/edit';
+
+        return $this->view->render($request, compact('people', 'viewName'));
     }
 }
