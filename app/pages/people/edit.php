@@ -5,7 +5,7 @@
 
 <div class="container">
     <form method="post">
-        <table>
+        <table class="table">
             <tr>
                 <th>First name</th>
                 <th>Last name</th>
@@ -20,7 +20,7 @@
                 </tr>
             <?php endforeach; ?>
         </table>
-        <input type="submit" value="OK"/>
+        <input type="submit" value="OK" class="btn btn-lg btn-success"/>
     </form>
 
 </div>

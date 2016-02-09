@@ -18,12 +18,6 @@ $routes = include APP_PATH . 'app/routing.php';
 // Common functions
 require_once(APP_PATH . 'functions.php');
 
-// Update the JSON data with the new data
-if (!empty($request->get('people'))) {
-    $data = $request->get('people');
-    setPeopleFromFormInput($data, PEOPLE_FILENAME);
-}
-
 $context = new RequestContext();
 $context->fromRequest($request);
 $matcher = new UrlMatcher($routes, $context);
@@ -58,14 +52,20 @@ function render_template($request)
     return new Response(ob_get_clean());
 }
 
-function render($request, $data){
+function render($request, $data = []){
     extract($request->attributes->all(), EXTR_SKIP);
     extract($data);
+
+    if(isset($viewName)) {
+        $view = $viewName;
+    } else {
+        $view = $_route;
+    }
 
     ob_start();
 
     require_once(APP_PATH . 'app/pages/templates/header.php');
-    include sprintf(APP_PATH . 'app/pages/%s.php', $_route);
+    include sprintf(APP_PATH . 'app/pages/%s.php', $view);
     require_once(APP_PATH . 'app/pages/templates/footer.php');
 
     return new Response(ob_get_clean());
