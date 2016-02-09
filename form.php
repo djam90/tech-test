@@ -1,4 +1,4 @@
-<form>
+<form method="post">
     <table>
         <tr>
             <th>First name</th>
