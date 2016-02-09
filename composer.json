@@ -1,0 +1,20 @@
+{
+  "name": "djam90/tech-test",
+  "description": "Sky Betting & Gaming Tech Test",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Daniel Twigg",
+      "email": "dantwiggweb@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "require": {
+    "symfony/http-foundation": "^3.0"
+  }
+}

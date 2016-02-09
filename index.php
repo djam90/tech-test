@@ -1,13 +1,20 @@
 <?php
 
+require_once __DIR__.'/vendor/autoload.php';
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+$request = Request::createFromGlobals();
+
 $peopleFilename = 'people.json';
 
 // Common functions
 require_once('functions.php');
 
 // Update the JSON data with the new data
-if (isset($_POST['people'])) {
-    $data = $_POST['people'];
+if (!empty($request->get('people'))) {
+    $data = $request->get('people');
     setPeopleFromFormInput($data, $peopleFilename);
 }
 
