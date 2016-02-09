@@ -6,9 +6,11 @@ define('APP_PATH', dirname(dirname(__FILE__)) . '/');
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
 
 $request = Request::createFromGlobals();
-$response = new Response();
+$routes = include APP_PATH . 'app/routing.php';
 
 $peopleFilename = APP_PATH . 'people.json';
 
@@ -24,23 +26,25 @@ if (!empty($request->get('people'))) {
 // Get people from storage
 $people = getPeopleFromJsonFile($peopleFilename);
 
-$map = array(
-    '/' => APP_PATH . '/app/pages/form.php',
-);
+$context = new RequestContext();
+$context->fromRequest($request);
+$matcher = new UrlMatcher($routes, $context);
 
-$path = $request->getPathInfo();
-if (isset($map[$path])) {
+try {
+    extract($matcher->match($request->getPathInfo()), EXTR_SKIP);
 
     ob_start();
 
-    require_once('../app/pages/templates/header.php');
-    require $map[$path];
-    require_once('../app/pages/templates/footer.php');
+    require_once(APP_PATH . 'app/pages/templates/header.php');
+    include sprintf(APP_PATH . 'app/pages/%s.php', $_route);
+    require_once(APP_PATH . 'app/pages/templates/footer.php');
 
-    $response->setContent(ob_get_clean());
-} else {
-    $response->setStatusCode(404);
-    $response->setContent('Not Found');
+    $response = new Response(ob_get_clean());
+
+} catch (Routing\Exception\ResourceNotFoundException $e) {
+    $response = new Response('Not Found', 404);
+} catch (Exception $e) {
+    $response = new Response('An error occurred', 500);
 }
 
 $response->setStatusCode(200);
