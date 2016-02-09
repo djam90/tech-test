@@ -14,5 +14,9 @@ if (isset($_POST['people'])) {
 // Get people from storage
 $people = getPeopleFromJsonFile($peopleFilename);
 
+require_once('views/header.php');
+
 // Include the HTML page
 require_once('form.php');
+
+require_once('views/footer.php');
