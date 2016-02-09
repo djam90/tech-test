@@ -2,14 +2,25 @@
 
 namespace App\Controllers;
 
+use App\View\View;
 use Symfony\Component\HttpFoundation\Request;
 
 class PeopleController {
 
+    /**
+     * @var View
+     */
+    private $view;
+
+    public function __construct()
+    {
+        $this->view = new View();
+    }
+
     public function indexAction(Request $request)
     {
         $viewName = 'people/dashboard';
-        return render($request, compact('viewName'));
+        return $this->view->render($request, compact('viewName'));
     }
 
     public function editAction(Request $request)
@@ -23,6 +34,6 @@ class PeopleController {
         // Get people from storage
         $people = getPeopleFromJsonFile(PEOPLE_FILENAME);
 
-        return render($request, compact('people'));
+        return $this->view->render($request, compact('people'));
     }
 }
