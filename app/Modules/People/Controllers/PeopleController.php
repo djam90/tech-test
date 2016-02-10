@@ -2,21 +2,27 @@
 
 namespace App\Modules\People\Controllers;
 
+use App\Modules\People\PeopleRepository;
 use App\View\View;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 class PeopleController
 {
-
     /**
      * @var View
      */
     private $view;
 
+    /**
+     * @var PeopleRepository
+     */
+    private $peopleRepository;
+
     public function __construct()
     {
         $this->view = new View();
+        $this->peopleRepository = new PeopleRepository();
     }
 
     public function indexAction(Request $request)
@@ -42,11 +48,11 @@ class PeopleController
             }
 
             $data = $request->get('people');
-            setPeopleFromFormInput($data, PEOPLE_FILENAME);
+            $this->peopleRepository->setPeople($data);
         }
 
         // Get people from storage
-        $people = getPeopleFromJsonFile(PEOPLE_FILENAME);
+        $people = $this->peopleRepository->getPeople();
 
         $viewName = 'Modules/People/Views/edit';
 

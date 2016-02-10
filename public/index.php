@@ -10,7 +10,6 @@ use App\TechTest\Csrf;
 require_once __DIR__.'/../vendor/autoload.php';
 
 define('APP_PATH', dirname(dirname(__FILE__)) . '/');
-define('PEOPLE_FILENAME', APP_PATH . 'people.json');
 
 $request = Request::createFromGlobals();
 $request->setSession(new Session());
