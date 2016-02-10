@@ -3,9 +3,11 @@
 namespace App\Modules\People\Controllers;
 
 use App\View\View;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
-class PeopleController {
+class PeopleController
+{
 
     /**
      * @var View
@@ -25,8 +27,20 @@ class PeopleController {
 
     public function editAction(Request $request)
     {
+        $csrfToken = $request->getSession()->get('csrf_token');
+
         // Update the JSON data with the new data
         if (!empty($request->get('people'))) {
+
+            // Check CSRF vulnerability
+            if (!$request->get('csrf_token')) {
+                throw new Exception("No Token Found");
+            } else {
+                if ($request->get('csrf_token') !== $csrfToken) {
+                    throw new Exception('Token Mismatch');
+                }
+            }
+
             $data = $request->get('people');
             setPeopleFromFormInput($data, PEOPLE_FILENAME);
         }
@@ -36,6 +50,6 @@ class PeopleController {
 
         $viewName = 'Modules/People/Views/edit';
 
-        return $this->view->render($request, compact('people', 'viewName'));
+        return $this->view->render($request, compact('people', 'viewName', 'csrfToken'));
     }
 }

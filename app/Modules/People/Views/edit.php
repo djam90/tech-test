@@ -5,6 +5,9 @@
 
 <div class="container">
     <form method="post">
+
+        <input type="hidden" name="csrf_token" value="<?=$csrfToken;?>">
+
         <table class="table">
             <tr>
                 <th>First name</th>
